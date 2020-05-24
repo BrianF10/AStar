@@ -16,9 +16,10 @@ public:
     bool search(Point& new_start, Point& new_end, Map& new_map);
     void SetHFunc(string& h_func);
     void SetEps(int new_eps);
-
+    void PrintAStar(Point& new_start, Point& new_end, Map& new_map, string& h_function, int n_eps=1);
     string h_function;
     double eps = 1.0;
+    void Mode(Point& new_start, Point& new_end, Map& new_map, string mode, string h_func, int n_eps);
 };
 
 #endif // ASTAR_H

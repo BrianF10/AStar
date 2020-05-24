@@ -1,11 +1,3 @@
-//============================================================================
-// Name        : intern_read.cpp
-// Author      : Angulo Brian
-// Version     :
-// Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
-//============================================================================
-
 #include <QCoreApplication>
 #include <iostream>
 #include <list>
@@ -18,80 +10,10 @@
 #include <node.h>
 #include <dijkstra.h>
 #include <astar.h>
-//#include <iterator>
-
 
 using namespace std;
 
-void PrintAStar(Point& start, Point& end, Map& map, string& h_function, int new_eps=1){
-    AStar as;
-    as.SetHFunc(h_function);
-    if (new_eps > 1){
-        as.SetEps(new_eps);
-    }
-
-    if(as.search(start, end, map)) {
-        list<Point> path;
-        double c = as.Path(path);
-        int width = map.GetWidth();
-        int height = map.GetHeight();
-        for (int y = -1; y < height + 1; ++y) {
-            for (int x = -1; x < width + 1; ++x){
-                if(x < 0 || y < 0 || x >=width || y >= height|| map(x, y) == 1){
-                    cout << char(0xdb);
-                }
-                else if( find( path.begin(), path.end(), Point(x, y) )!= path.end()) {
-                    cout << "x";
-                }
-                else{
-                    cout << ".";
-                }
-            }
-            cout << "\n";
-        }
-        cout << "\nPath cost " << c << ": ";
-        for(list<Point>::iterator i = path.begin(); i != path.end(); i++ ) {
-            int xx = (*i).GetX();
-            int yy = (*i).GetY();
-            cout<< "(" << xx << ", " << yy << ") ";
-        }
-        cout << "\n";
-    }
-}
-
-void PrintDijkstra(Point& start, Point& end, Map& map){
-    Dijkstra as;
-
-    if(as.search(start, end, map)) {
-        list<Point> path;
-        double c = as.Path(path);
-        int width = map.GetWidth();
-        int height = map.GetHeight();
-        for (int y = -1; y < height + 1; ++y) {
-            for (int x = -1; x < width + 1; ++x){
-                if(x < 0 || y < 0 || x >=width || y >= height|| map(x, y) == 1){
-                    cout << char(0xdb);
-                }
-                else if( find( path.begin(), path.end(), Point(x, y) )!= path.end()) {
-                    cout << "x";
-                }
-                else{
-                    cout << ".";
-                }
-            }
-            cout << "\n";
-        }
-        cout << "\nPath cost " << c << ": ";
-        for(list<Point>::iterator i = path.begin(); i != path.end(); i++ ) {
-            int xx = (*i).GetX();
-            int yy = (*i).GetY();
-            cout<< "(" << xx << ", " << yy << ") ";
-        }
-        cout << "\n";
-    }
-}
-
-void Mode(Point& new_start, Point& new_end, Map& map, string mode, string h_func, int new_eps=1) {
+void Mode(Point& new_start, Point& new_end, Map& new_map, string mode, string h_func, int new_eps=1) {
     if (mode == "A" or mode == "W") {
         if (mode=="A") {
             cout << "mode: AStar" << "\t";
@@ -106,25 +28,49 @@ void Mode(Point& new_start, Point& new_end, Map& map, string mode, string h_func
         }else {
             cout << "Heuristic function: Euclidean" << endl;
         }
-        PrintAStar(new_start, new_end, map, h_func, new_eps);
-    }
-    else{
+        AStar as;
+        as.SetHFunc(h_func);
+        if(mode == "W") {
+            if (new_eps > 1){
+                as.SetEps(new_eps);
+            }
+        }
+        bool is_found;
+        is_found = as.search(new_start, new_end, new_map);
+        if(is_found) {
+            as.Path();
+            as.PrintMap(is_found, new_map);
+            as.PrintPath(is_found);
+        }else{
+            cout << "Path not found!" <<endl;
+        }
+    }else{
         cout << "mode: Dijkstra" << endl;
-        PrintDijkstra(new_start, new_end, map);
+        Dijkstra ds;
+        bool is_found;
+        is_found = ds.search(new_start, new_end, new_map);
+        if(is_found) {
+            ds.Path();
+            ds.PrintMap(is_found, new_map);
+            ds.PrintPath(is_found);
+        }else{
+            cout << "Path not found!" <<endl;
+        }
     }
 }
 
 int main(int argc, char *argv[]) {
-//int main() {
     QCoreApplication a(argc, argv);
     string mode, h_function;
     int eps=1;
+    string namefile;
+    int start_x, start_y;
+    int end_x, end_y;
     cout << "Please, insert first letter of mode: " << endl;
     cout <<'\t' << "A for AStar, W for WAStar, or D for Dijkstra mode" << endl;
     cin >> mode;
     if (mode=="A" or mode=="W") {
         cout << "Please, insert first letter of heuristic function name: " << endl;
-        //cout <<'\t' << "Manhatan, Chevishev or Euclidean" << endl;
         cout <<'\t' << "M, C or E for Manhatan, Chevishev or Euclidean respectively" << endl;
         cin >> h_function;
         if (mode=="W") {
@@ -133,15 +79,18 @@ int main(int argc, char *argv[]) {
         }
         //"Manhatan, Chevishev or Euclidean"
     }
-    Map map("test.txt");
-    //сначала ширина, а потом высота?? исправить?
-    Point start(13,0), end(8, 8);
+    cout << "Please, insert name's file" << endl;
+    cin >> namefile;
+    cout << "Please, insert coordinats of start (int x, int y): " << endl;
+    cin >> start_x >> start_y;
+    cout << "Please, insert coordinats of end (int x, int y): " << endl;
+    cin >> end_x >> end_y;
+    Map map(namefile);
+    Point start(start_x, start_y), end(end_x, end_y);
     Mode(start, end, map, mode, h_function, eps);
+    cout << "============================================================================";
+    cout << endl;
+    cout << endl;
 
-    Map map1("filename.txt");
-    Point start1(0,0), end1(0, 6);
-    Mode(start1, end1, map1, mode, h_function, eps);
-
-    //return 0;
     return a.exec();
 }

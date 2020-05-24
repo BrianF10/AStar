@@ -16,7 +16,6 @@ public:
     int operator() (int x, int y);
     int GetWidth() const;
     int GetHeight() const;
-//    Map::Map& operator = (const Map&);
 private:
     string filename;
     ifstream myfile;

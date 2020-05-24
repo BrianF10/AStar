@@ -3,7 +3,6 @@
 #include <string>
 #include <iostream>
 
-
 Map::Map() {
     width = 8;
     height = 8;
@@ -59,15 +58,12 @@ Map::Map(const string& new_filename) {
     }
 }
 
-
 Map::~Map() {
     myfile.close();
     delete[] map;
 }
 
 int Map::operator() (int x, int y) {
-        // Y initializes from 0
-        //return map[y * width + x];
     if (map[y * width + x] == '1'){
         return 1;
     }
@@ -75,9 +71,11 @@ int Map::operator() (int x, int y) {
         return 0;
     }
 }
+
 int Map::GetWidth() const {
     return width;
 }
+
 int Map::GetHeight() const {
     return height;
 }
