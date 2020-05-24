@@ -1,0 +1,2 @@
+# AStar
+Developed algorithm A*
