@@ -21,7 +21,7 @@ private:
     ifstream myfile;
     int width;
     int height;
-    char* map;
+    int* map;
 };
 
 #endif // MAP_H

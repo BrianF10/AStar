@@ -1,4 +1,3 @@
-#include <QCoreApplication>
 #include <iostream>
 #include <list>
 #include <algorithm>
@@ -13,7 +12,7 @@
 
 using namespace std;
 
-void Mode(Point& new_start, Point& new_end, Map& new_map, string mode, string h_func, int new_eps=1) {
+void Mode(Point& new_start, Point& new_end, Map& new_map, string mode, string h_func, int new_eps) {
     if (mode == "A" or mode == "W") {
         if (mode=="A") {
             cout << "mode: AStar" << "\t";
@@ -38,7 +37,6 @@ void Mode(Point& new_start, Point& new_end, Map& new_map, string mode, string h_
         bool is_found;
         is_found = as.search(new_start, new_end, new_map);
         if(is_found) {
-            as.Path();
             as.PrintMap(is_found, new_map);
             as.PrintPath(is_found);
         }else{
@@ -50,7 +48,6 @@ void Mode(Point& new_start, Point& new_end, Map& new_map, string mode, string h_
         bool is_found;
         is_found = ds.search(new_start, new_end, new_map);
         if(is_found) {
-            ds.Path();
             ds.PrintMap(is_found, new_map);
             ds.PrintPath(is_found);
         }else{
@@ -59,8 +56,7 @@ void Mode(Point& new_start, Point& new_end, Map& new_map, string mode, string h_
     }
 }
 
-int main(int argc, char *argv[]) {
-    QCoreApplication a(argc, argv);
+int main() {
     string mode, h_function;
     int eps=1;
     string namefile;
@@ -81,16 +77,14 @@ int main(int argc, char *argv[]) {
     }
     cout << "Please, insert name's file" << endl;
     cin >> namefile;
-    cout << "Please, insert coordinats of start (int x, int y): " << endl;
+    cout << "Please, insert coordinates of start (int x, int y): " << endl;
     cin >> start_x >> start_y;
-    cout << "Please, insert coordinats of end (int x, int y): " << endl;
+    cout << "Please, insert coordinates of end (int x, int y): " << endl;
     cin >> end_x >> end_y;
     Map map(namefile);
     Point start(start_x, start_y), end(end_x, end_y);
     Mode(start, end, map, mode, h_function, eps);
-    cout << "============================================================================";
-    cout << endl;
     cout << endl;
 
-    return a.exec();
+    return 0;
 }

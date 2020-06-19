@@ -1,5 +1,6 @@
 #ifndef POINT_H
 #define POINT_H
+#include<iostream>
 
 class Point {
 public:
@@ -11,12 +12,13 @@ public:
         x = a;
         y = b;
     }
-    bool operator== (const Point& new_point) {
-        bool is;
-        is = new_point.x == x && new_point.y == y;
-        return is;
+    bool operator== (const Point& new_point) const{
+        return new_point.x == x && new_point.y == y;
     }
-    Point operator+ (const Point& new_point) {
+    bool operator!= (const Point& new_point) const{
+        return !(*this == new_point);
+    }
+    Point operator+ (const Point& new_point) const{
         Point pp;
         pp.x = new_point.x + x;
         pp.y = new_point.y + y;
@@ -31,6 +33,9 @@ public:
     }
     int GetY() {
         return y;
+    }
+    void printPoint() {
+        std::cout << "X: " << x << " Y: " << y;
     }
 private:
     int x, y;
